@@ -1,3 +1,7 @@
+// Copyright (c) 2022 Inaba (@hollyhockberry)
+// This software is released under the MIT License.
+// http://opensource.org/licenses/mit-license.php
+
 using System.Xml.Linq;
 
 namespace XmlPeek.UnitTest

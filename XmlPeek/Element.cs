@@ -1,4 +1,11 @@
-﻿using System.Xml.Linq;
+﻿// Copyright (c) 2022 Inaba (@hollyhockberry)
+// This software is released under the MIT License.
+// http://opensource.org/licenses/mit-license.php
+
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Xml.Linq;
+using XmlPeek.Extensions;
 
 namespace XmlPeek
 {
@@ -27,11 +34,42 @@ namespace XmlPeek
             }
         }
 
+        IEnumerable<Element> GetSubElements()
+        {
+            static bool IsInherit(Type type, Type parent)
+            {
+                Type? t = type;
+                while (t != null && t != typeof(object))
+                {
+                    if (t == parent)
+                    {
+                        return true;
+                    }
+                    t = t.BaseType;
+                }
+                return false;
+            }
+
+            return GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .Where(p => IsInherit(p.PropertyType, typeof(Element)))
+                .Select(p => p.GetValue(this))
+                .OfType<Element>();
+        }
+
         public virtual void Poke(XElement parent)
         {
+            var subElements = GetSubElements();
+            if (subElements.Any(e => e.XElement != null))
+            {
+                _ = ValidXElement;
+            }
             if (XElement == null)
             {
                 return;
+            }
+            foreach (var e in subElements)
+            {
+                e.Poke(XElement);
             }
 
             var element = parent.Element(Name);
@@ -42,6 +80,30 @@ namespace XmlPeek
             }
             element.RemoveAll();
             element.Add(XElement?.Elements());
+        }
+
+        protected T? GetContent<T>([CallerMemberName] string? elementName = default)
+        {
+            if (elementName == null)
+            {
+                throw new ArgumentNullException(nameof(elementName));
+            }
+            return (XElement?.Element(elementName)).Value<T>();
+        }
+
+        protected void SetContent<T>(T? value, [CallerMemberName] string? elementName = default)
+        {
+            if (elementName == null)
+            {
+                throw new ArgumentNullException(nameof(elementName));
+            }
+            var e = XElement?.Element(elementName);
+            if (e == null)
+            {
+                e = new XElement(elementName);
+                ValidXElement.Add(e);
+            }
+            e.Value = $"{value}";
         }
     }
 }
