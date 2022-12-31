@@ -41,5 +41,15 @@ namespace XmlPeek.Extensions
         }
 
         public static T? Value<T>(this XElement? element) => Convert<T>(element?.Value);
+
+        public static IEnumerable<T>? Values<T>(this XElement? element)
+        {
+            var values = element?.Elements()?.Select(e => e.Value<T>());
+            if (values?.Any(v => v == null) == true)
+            {
+                throw new NotImplementedException();
+            }
+            return values?.OfType<T>();
+        }
     }
 }
