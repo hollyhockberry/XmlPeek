@@ -5,6 +5,7 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
+using XmlPeek.Attributes;
 using XmlPeek.Extensions;
 
 namespace XmlPeek
@@ -34,6 +35,12 @@ namespace XmlPeek
             }
         }
 
+        public Element(XElement element)
+        {
+            Name = $"{element.Name}";
+            _XElement = element;
+        }
+
         IEnumerable<Element> GetSubElements()
         {
             static bool IsInherit(Type type, Type parent)
@@ -52,6 +59,7 @@ namespace XmlPeek
 
             return GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
                 .Where(p => IsInherit(p.PropertyType, typeof(Element)))
+                .Where(p => p.GetCustomAttribute<IgnoreElementAttribute>() == null)
                 .Select(p => p.GetValue(this))
                 .OfType<Element>();
         }
