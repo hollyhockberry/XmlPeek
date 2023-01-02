@@ -60,7 +60,8 @@ namespace XmlPeek.UnitTest
             element.Poke(xml);
             Assert.AreEqual(0, xml.Element("ElementList")?.Elements()?.Count());
 
-            element.Add(new Element(new XElement("Element", new XElement("Child", "0"))));
+            element.Add(new Element("Element"));
+            element[0].ValidXElement.Add(new XElement("Child", "0"));
             Assert.AreEqual(1, element.Count);
             Assert.AreEqual(0, xml.Element("ElementList")?.Elements()?.Count());
 
@@ -84,7 +85,8 @@ namespace XmlPeek.UnitTest
             element.Poke(xml);
             Assert.IsNull(xml.Element("ElementList"));
 
-            element.Add(new Element(new XElement("Element", new XElement("Child", "0"))));
+            element.Add(new Element("Element"));
+            element[0].ValidXElement.Add(new XElement("Child", "0"));
             Assert.AreEqual(1, element.Count);
             Assert.IsNull(xml.Element("ElementList"));
 
