@@ -13,7 +13,7 @@ namespace XmlPeek
     {
         List<T>? _List;
 
-        public ElementList(XElement? parent, string itemName, [CallerMemberName] string? name = default) : base(parent, name!)
+        public ElementList(string itemName, XElement? parent, [CallerMemberName] string? name = default) : base(parent, name!)
         {
             if (name == null)
             {

@@ -22,7 +22,7 @@ namespace XmlPeek.UnitTest
                     new XElement("Element", new XElement("Child", "4")),
                 }));
 
-            var element = new ElementList<Element>(xml, "Element", "ElementList");
+            var element = new ElementList<Element>("Element", xml, "ElementList");
 
             Assert.IsFalse(element.IsReadOnly);
             Assert.AreEqual(5, element.Count);
@@ -51,7 +51,7 @@ namespace XmlPeek.UnitTest
         public void TestEmptyConstructAndModify()
         {
             var xml = new XElement("Root", new XElement("ElementList"));
-            var element = new ElementList<Element>(xml, "Element", "ElementList");
+            var element = new ElementList<Element>("Element", xml, "ElementList");
 
             Assert.AreEqual(0, element.Count);
             Assert.AreEqual(1, xml.Elements().Count());
@@ -77,7 +77,7 @@ namespace XmlPeek.UnitTest
         public void TestNullConstructAndModify()
         {
             var xml = new XElement("Root");
-            var element = new ElementList<Element>(xml, "Element", "ElementList");
+            var element = new ElementList<Element>("Element", xml, "ElementList");
 
             Assert.AreEqual(0, element.Count);
             Assert.IsNull(element.XElement);
@@ -104,7 +104,7 @@ namespace XmlPeek.UnitTest
             var xml = new XElement("Root");
             Assert.ThrowsException<ArgumentNullException>(() =>
             {
-                _ = new ElementList<Element>(xml, "Element", null);
+                _ = new ElementList<Element>("Element", xml, null);
             });
         }
     }
