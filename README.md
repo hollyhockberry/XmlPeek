@@ -1,3 +1,5 @@
+[![Build and Test](https://github.com/hollyhockberry/XmlPeek/actions/workflows/dotnet.yml/badge.svg)](https://github.com/hollyhockberry/XmlPeek/actions/workflows/dotnet.yml)
+
 # XmlPeek
 
 XMLドキュメントの一部分を操作するライブラリです。  
@@ -221,4 +223,22 @@ element.Poke(xml);
 //    <Child1>Foo</Child1>
 //  </Element>
 //</Root>
+```
+
+### ソリューションにローカルパッケージソース導入する方法
+
+```.sin```ファイルがあるフォルダに ```NuGet.config``` を置きます。  
+.nupkg ファイルを```./LocalPackages```に置けばOK。
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+    <packageSources>
+        <add key="LocalPackages" value="./LocalPackages" />
+    </packageSources>
+    <activePackageSource>
+        <!-- this tells that all of them are active -->
+        <add key="All" value="(Aggregate source)" />
+    </activePackageSource>
+</configuration>
 ```
