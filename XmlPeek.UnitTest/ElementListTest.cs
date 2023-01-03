@@ -107,5 +107,42 @@ namespace XmlPeek.UnitTest
                 _ = new ElementList<Element>("Element", xml, null);
             });
         }
+
+        class TestElement : Element
+        {
+            public TestElement(XElement? parent) : base(parent, "Element") { }
+
+            public int? Child
+            {
+                get => GetContent<int>();
+                set => SetContent(value);
+            }
+        }
+
+        [TestMethod]
+        public void TestConstruction2()
+        {
+            var xml = new XElement("Root",
+                new XElement("ElementList", new object[]
+                {
+                    new XElement("Element", new XElement("Child", "0")),
+                    new XElement("Element", new XElement("Child", "1")),
+                    new XElement("Element", new XElement("Child", "2")),
+                    new XElement("Element", new XElement("Child", "3")),
+                    new XElement("Element", new XElement("Child", "4")),
+                }));
+
+            var element = new ElementList<TestElement>(xml, "ElementList");
+
+            Assert.AreEqual(5, element.Count);
+            Assert.AreEqual(0, element[0].Child);
+            Assert.AreEqual(1, element[1].Child);
+            Assert.AreEqual(2, element[2].Child);
+            Assert.AreEqual(3, element[3].Child);
+            Assert.AreEqual(4, element[4].Child);
+
+            Assert.AreEqual(1, xml.Elements().Count());
+            Assert.AreEqual(0, xml.Element("ElementList")?.Elements()?.Count());
+        }
     }
 }
