@@ -45,12 +45,43 @@ namespace XmlPeek.UnitTest
         }
 
         [TestMethod]
+        public void TestEmpty()
+        {
+            var xml = new XElement("Root", new XElement("ValueList"));
+            var element = new ValueList<int>(xml, "Item", "ValueList");
+            Assert.AreEqual(0, element.Count);
+            element.Poke(xml);
+            Assert.AreEqual(0, xml.Element("ValueList")?.Elements()?.Count());
+
+            element.Add(100);
+            Assert.AreEqual(1, element.Count);
+            element.Poke(xml);
+            Assert.AreEqual(1, xml.Element("ValueList")?.Elements()?.Count());
+            Assert.AreEqual("100", xml.Element("ValueList")?.Element("Item")?.Value);
+        }
+
+        [TestMethod]
         public void TestException()
         {
-            var xml = new XElement("Root");
             Assert.ThrowsException<ArgumentNullException>(() =>
             {
+                var xml = new XElement("Root");
                 _ = new ValueList<int>(xml, "Item", null);
+            });
+
+            Assert.ThrowsException<Exception>(() =>
+            {
+                var xml = new XElement("Root",
+                    new XElement("ValueList", new object[]
+                    {
+                        new XElement("Item", "0"),
+                        new XElement("Item", "1"),
+                        new XElement("OtherElement", new XElement("Other", "0")),
+                        new XElement("Item", "2"),
+                        new XElement("Item", "3"),
+                        new XElement("Item", "4"),
+                    }));
+                _ = new ValueList<int>(xml, "Item", "ValueList");
             });
         }
     }

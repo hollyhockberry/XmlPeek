@@ -28,6 +28,10 @@ namespace XmlPeek
                 .Select(e => ctor.Invoke(new object[] { new XElement("Root", e), itemName }))
                 .OfType<T>()
                 .ToList();
+            if (_List?.Any(e => e.XElement == null) == true)
+            {
+                throw new Exception($"{name} contains invalid elements.");
+            }
             XElement?.RemoveAll();
         }
 
@@ -46,6 +50,10 @@ namespace XmlPeek
                 .Select(e => ctor.Invoke(new object[] { new XElement("Root", e) }))
                 .OfType<T>()
                 .ToList();
+            if (_List?.Any(e => e.XElement == null) == true)
+            {
+                throw new Exception($"{name} contains invalid elements.");
+            }
             XElement?.RemoveAll();
         }
 
