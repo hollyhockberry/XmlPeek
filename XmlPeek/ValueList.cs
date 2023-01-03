@@ -19,6 +19,10 @@ namespace XmlPeek
             {
                 throw new ArgumentNullException(nameof(name));
             }
+            if (XElement?.Elements().Any(e => e.Name != itemName) == true)
+            {
+                throw new Exception($"{name} contains invalid elements.");
+            }
             ItemName = itemName;
         }
 
