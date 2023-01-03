@@ -22,7 +22,7 @@ namespace XmlPeek.UnitTest
                     new XElement("Element", new XElement("Child", "4")),
                 }));
 
-            var element = new ElementList<Element>(xml, "Element", "ElementList");
+            var element = new ElementList<Element>("Element", xml, "ElementList");
 
             Assert.IsFalse(element.IsReadOnly);
             Assert.AreEqual(5, element.Count);
@@ -51,7 +51,7 @@ namespace XmlPeek.UnitTest
         public void TestEmptyConstructAndModify()
         {
             var xml = new XElement("Root", new XElement("ElementList"));
-            var element = new ElementList<Element>(xml, "Element", "ElementList");
+            var element = new ElementList<Element>("Element", xml, "ElementList");
 
             Assert.AreEqual(0, element.Count);
             Assert.AreEqual(1, xml.Elements().Count());
@@ -60,7 +60,8 @@ namespace XmlPeek.UnitTest
             element.Poke(xml);
             Assert.AreEqual(0, xml.Element("ElementList")?.Elements()?.Count());
 
-            element.Add(new Element(new XElement("Element", new XElement("Child", "0"))));
+            element.Add(new Element("Element"));
+            element[0].ValidXElement.Add(new XElement("Child", "0"));
             Assert.AreEqual(1, element.Count);
             Assert.AreEqual(0, xml.Element("ElementList")?.Elements()?.Count());
 
@@ -76,7 +77,7 @@ namespace XmlPeek.UnitTest
         public void TestNullConstructAndModify()
         {
             var xml = new XElement("Root");
-            var element = new ElementList<Element>(xml, "Element", "ElementList");
+            var element = new ElementList<Element>("Element", xml, "ElementList");
 
             Assert.AreEqual(0, element.Count);
             Assert.IsNull(element.XElement);
@@ -84,7 +85,8 @@ namespace XmlPeek.UnitTest
             element.Poke(xml);
             Assert.IsNull(xml.Element("ElementList"));
 
-            element.Add(new Element(new XElement("Element", new XElement("Child", "0"))));
+            element.Add(new Element("Element"));
+            element[0].ValidXElement.Add(new XElement("Child", "0"));
             Assert.AreEqual(1, element.Count);
             Assert.IsNull(xml.Element("ElementList"));
 
@@ -102,8 +104,45 @@ namespace XmlPeek.UnitTest
             var xml = new XElement("Root");
             Assert.ThrowsException<ArgumentNullException>(() =>
             {
-                _ = new ElementList<Element>(xml, "Element", null);
+                _ = new ElementList<Element>("Element", xml, null);
             });
+        }
+
+        class TestElement : Element
+        {
+            public TestElement(XElement? parent) : base(parent, "Element") { }
+
+            public int? Child
+            {
+                get => GetContent<int>();
+                set => SetContent(value);
+            }
+        }
+
+        [TestMethod]
+        public void TestConstruction2()
+        {
+            var xml = new XElement("Root",
+                new XElement("ElementList", new object[]
+                {
+                    new XElement("Element", new XElement("Child", "0")),
+                    new XElement("Element", new XElement("Child", "1")),
+                    new XElement("Element", new XElement("Child", "2")),
+                    new XElement("Element", new XElement("Child", "3")),
+                    new XElement("Element", new XElement("Child", "4")),
+                }));
+
+            var element = new ElementList<TestElement>(xml, "ElementList");
+
+            Assert.AreEqual(5, element.Count);
+            Assert.AreEqual(0, element[0].Child);
+            Assert.AreEqual(1, element[1].Child);
+            Assert.AreEqual(2, element[2].Child);
+            Assert.AreEqual(3, element[3].Child);
+            Assert.AreEqual(4, element[4].Child);
+
+            Assert.AreEqual(1, xml.Elements().Count());
+            Assert.AreEqual(0, xml.Element("ElementList")?.Elements()?.Count());
         }
     }
 }

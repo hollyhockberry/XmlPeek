@@ -13,7 +13,7 @@ namespace XmlPeek
     {
         List<T>? _List;
 
-        public ElementList(XElement? parent, string itemName, [CallerMemberName] string? name = default) : base(parent, name!)
+        public ElementList(string itemName, XElement? parent, [CallerMemberName] string? name = default) : base(parent, name!)
         {
             if (name == null)
             {
@@ -26,6 +26,24 @@ namespace XmlPeek
             }
             _List = XElement?.Elements()
                 .Select(e => ctor.Invoke(new object[] { new XElement("Root", e), itemName }))
+                .OfType<T>()
+                .ToList();
+            XElement?.RemoveAll();
+        }
+
+        public ElementList(XElement? parent, [CallerMemberName] string? name = default) : base(parent, name!)
+        {
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            var ctor = typeof(T).GetConstructor(new Type[] { typeof(XElement) });
+            if (ctor == null)
+            {
+                throw new Exception($"Type {typeof(T).Name} has no available constructor.");
+            }
+            _List = XElement?.Elements()
+                .Select(e => ctor.Invoke(new object[] { new XElement("Root", e) }))
                 .OfType<T>()
                 .ToList();
             XElement?.RemoveAll();
