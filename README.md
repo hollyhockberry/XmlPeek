@@ -117,7 +117,7 @@ element.Poke(xml);
 
 ```csharp
 class TestElement : Element {
-  public TestElement(XElement? parent, string name) : base(parent, name) { }
+  public TestElement(XElement? parent) : base(parent, "Element") { }
 
   public string? Child {
       get => GetContent<string>();
@@ -126,14 +126,14 @@ class TestElement : Element {
 }
 
 var xml = XElement.Load('sample.xml');
-var element = new ElementList<TestElement>(xml, "Element", "ElementList");
+var element = new ElementList<TestElement>(xml, "ElementList");
 
 Console.WriteLine(element[0].Child); // >> 0
 Console.WriteLine(element[1].Child); // >> 1
 Console.WriteLine(element[2].Child); // >> 2
 
 element[2].Child = "Foo";
-element.Add(new TestElement(null, "Element") { Child = "Bar" });
+element.Add(new TestElement(null) { Child = "Bar" });
 
 element.Poke(xml);
 //<Root>

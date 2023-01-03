@@ -35,10 +35,9 @@ namespace XmlPeek
             }
         }
 
-        public Element(XElement element)
+        public Element(string name)
         {
-            Name = $"{element.Name}";
-            _XElement = element;
+            Name = name;
         }
 
         IEnumerable<Element> GetSubElements()
