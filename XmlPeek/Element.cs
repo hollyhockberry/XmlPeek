@@ -89,7 +89,7 @@ namespace XmlPeek
             element.Add(XElement?.Elements());
         }
 
-        protected T? GetContent<T>([CallerMemberName] string? elementName = default)
+        public T? GetContent<T>([CallerMemberName] string? elementName = default)
         {
             if (elementName == null)
             {
@@ -98,7 +98,7 @@ namespace XmlPeek
             return (XElement?.Element(elementName)).Value<T>();
         }
 
-        protected void SetContent<T>(T? value, [CallerMemberName] string? elementName = default)
+        public void SetContent<T>(T? value, [CallerMemberName] string? elementName = default)
         {
             if (elementName == null)
             {
@@ -111,6 +111,64 @@ namespace XmlPeek
                 ValidXElement.Add(e);
             }
             e.Value = $"{value}";
+        }
+
+        public T? GetAttribute<T>([CallerMemberName] string? attributeName = default)
+        {
+            if (attributeName == null)
+            {
+                throw new ArgumentNullException(nameof(attributeName));
+            }
+            return XElement.Attribute<T>(attributeName);
+        }
+
+        public T? GetAttribute<T>(string elementName, [CallerMemberName] string? attributeName = default)
+        {
+            if (attributeName == null)
+            {
+                throw new ArgumentNullException(nameof(attributeName));
+            }
+            return (XElement?.Element(elementName)).Attribute<T>(attributeName);
+        }
+
+        public void SetAttribute<T>(T value, [CallerMemberName] string? attributeName = default)
+        {
+            if (attributeName == null)
+            {
+                throw new ArgumentNullException(nameof(attributeName));
+            }
+            var attr = ValidXElement.Attribute(attributeName);
+            if (attr == null)
+            {
+                ValidXElement.Add(new XAttribute(attributeName, $"{value}"));
+            }
+            else
+            {
+                attr.Value = $"{value}";
+            }
+        }
+
+        public void SetAttribute<T>(T value, string elementName, [CallerMemberName] string? attributeName = default)
+        {
+            if (attributeName == null)
+            {
+                throw new ArgumentNullException(nameof(attributeName));
+            }
+            var e = XElement?.Element(elementName);
+            if (e == null)
+            {
+                e = new XElement(elementName);
+                ValidXElement.Add(e);
+            }
+            var attr = e.Attribute(attributeName);
+            if (attr == null)
+            {
+                e.Add(new XAttribute(attributeName, $"{value}"));
+            }
+            else
+            {
+                attr.Value = $"{value}";
+            }
         }
     }
 }

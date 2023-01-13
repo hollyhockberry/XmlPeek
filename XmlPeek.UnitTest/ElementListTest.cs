@@ -144,5 +144,47 @@ namespace XmlPeek.UnitTest
             Assert.AreEqual(1, xml.Elements().Count());
             Assert.AreEqual(0, xml.Element("ElementList")?.Elements()?.Count());
         }
+
+        [TestMethod]
+        public void TestInvalidElements1()
+        {
+            var xml = new XElement("Root",
+                new XElement("ElementList", new object[]
+                {
+                    new XElement("Element", new XElement("Child", "0")),
+                    new XElement("Element", new XElement("Child", "1")),
+                    new XElement("OtherElement", new XElement("Other", "0")),
+                    new XElement("Element", new XElement("Child", "2")),
+                    new XElement("Element", new XElement("Child", "3")),
+                    new XElement("OtherElement", new XElement("Other", "1")),
+                    new XElement("Element", new XElement("Child", "4")),
+                }));
+
+            Assert.ThrowsException<Exception>(() =>
+            {
+                _ = new ElementList<TestElement>(xml, "ElementList");
+            });
+        }
+
+        [TestMethod]
+        public void TestInvalidElements2()
+        {
+            var xml = new XElement("Root",
+                new XElement("ElementList", new object[]
+                {
+                    new XElement("Element", new XElement("Child", "0")),
+                    new XElement("Element", new XElement("Child", "1")),
+                    new XElement("OtherElement", new XElement("Other", "0")),
+                    new XElement("Element", new XElement("Child", "2")),
+                    new XElement("Element", new XElement("Child", "3")),
+                    new XElement("OtherElement", new XElement("Other", "1")),
+                    new XElement("Element", new XElement("Child", "4")),
+                }));
+
+            Assert.ThrowsException<Exception>(() =>
+            {
+                _ = new ElementList<Element>("Element", xml, "ElementList");
+            });
+        }
     }
 }

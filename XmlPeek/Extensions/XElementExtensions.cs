@@ -2,6 +2,7 @@
 // This software is released under the MIT License.
 // http://opensource.org/licenses/mit-license.php
 
+using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 
 namespace XmlPeek.Extensions
@@ -14,33 +15,65 @@ namespace XmlPeek.Extensions
             {
                 return default;
             }
-            var type = typeof(T);
+            try
+            {
+                var type = typeof(T);
 
-            if (type == typeof(int))
-            {
-                return (T)(object)int.Parse(str);
+                if (type == typeof(int))
+                {
+                    return (T)(object)int.Parse(str);
+                }
+                if (type == typeof(int?))
+                {
+                    return (T?)(object)int.Parse(str);
+                }
+                if (type == typeof(double))
+                {
+                    return (T)(object)double.Parse(str);
+                }
+                if (type == typeof(double?))
+                {
+                    return (T?)(object)double.Parse(str);
+                }
+                if (type == typeof(float))
+                {
+                    return (T)(object)float.Parse(str);
+                }
+                if (type == typeof(float?))
+                {
+                    return (T?)(object)float.Parse(str);
+                }
+                if (type == typeof(bool))
+                {
+                    return (T)(object)bool.Parse(str);
+                }
+                if (type == typeof(bool?))
+                {
+                    return (T?)(object)bool.Parse(str);
+                }
+                if (type == typeof(string))
+                {
+                    return (T)(object)str;
+                }
             }
-            if (type == typeof(double))
+            catch (FormatException)
             {
-                return (T)(object)double.Parse(str);
-            }
-            if (type == typeof(float))
-            {
-                return (T)(object)float.Parse(str);
-            }
-            if (type == typeof(bool))
-            {
-                return (T)(object)bool.Parse(str);
-            }
-            if (type == typeof(string))
-            {
-                return (T)(object)str;
+                return default;
             }
 
-            return default;
+            throw new NotImplementedException("Unsupported type");
         }
 
         public static T? Value<T>(this XElement? element) => Convert<T>(element?.Value);
+
+        public static T? Attribute<T>(this XElement? element, [CallerMemberName] string? name = default)
+        {
+            if (name is null)
+            {
+                throw new NotImplementedException();                
+            }
+            return Convert<T>(element?.Attribute(name)?.Value);
+        }
 
         public static IEnumerable<T>? Values<T>(this XElement? element)
         {
