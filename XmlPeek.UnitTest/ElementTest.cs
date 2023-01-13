@@ -207,5 +207,146 @@ namespace XmlPeek.UnitTest
             Assert.AreEqual("", element.String2);
             Assert.IsNull(element.String3);
         }
+
+        [TestMethod]
+        public void TestContentExtensions()
+        {
+            var xml = new XElement("Root", new object[]
+            {
+                new XElement("Element", new object[]
+                {
+                    new XElement("Integer1", "12345"),
+                    new XElement("Integer2"),
+                    new XElement("Double1", "1.2345"),
+                    new XElement("Double2"),
+                    new XElement("Float1", "3.14"),
+                    new XElement("Float2"),
+                    new XElement("Boolean1", "True"),
+                    new XElement("Boolean2"),
+                    new XElement("String1", "Text"),
+                    new XElement("String2"),
+                }),
+            });
+
+            var element = new Element(xml, "Element");
+
+            Assert.AreEqual(12345, element.GetContent<int?>("Integer1"));
+            Assert.AreEqual(12345, element.GetContent<int>("Integer1"));
+            Assert.IsNull(element.GetContent<int?>("Integer2"));
+            Assert.IsNull(element.GetContent<int?>("Integer3"));
+            Assert.AreEqual(1.2345, element.GetContent<double?>("Double1"));
+            Assert.AreEqual(1.2345, element.GetContent<double>("Double1"));
+            Assert.IsNull(element.GetContent<double?>("Double2"));
+            Assert.IsNull(element.GetContent<double?>("Double3"));
+            Assert.AreEqual(3.14f, element.GetContent<float?>("Float1"));
+            Assert.AreEqual(3.14f, element.GetContent<float>("Float1"));
+            Assert.IsNull(element.GetContent<float?>("Float2"));
+            Assert.IsNull(element.GetContent<float?>("Float3"));
+            Assert.IsTrue(element.GetContent<bool?>("Boolean1"));
+            Assert.IsTrue(element.GetContent<bool>("Boolean1"));
+            Assert.IsNull(element.GetContent<bool?>("Boolean2"));
+            Assert.IsNull(element.GetContent<bool?>("Boolean3"));
+            Assert.AreEqual("Text", element.GetContent<string?>("String1"));
+            Assert.AreEqual("Text", element.GetContent<string>("String1"));
+            Assert.AreEqual("", element.GetContent<string>("String2"));
+            Assert.IsNull(element.GetContent<string?>("String3"));
+
+            element.SetContent(9999, "Integer1");
+            Assert.AreEqual("9999", element.XElement?.Element("Integer1")?.Value);
+            element.SetContent(1.2345, "Integer1");
+            Assert.AreEqual("1.2345", element.XElement?.Element("Integer1")?.Value);
+            element.SetContent(3.14f, "Integer1");
+            Assert.AreEqual("3.14", element.XElement?.Element("Integer1")?.Value);
+            element.SetContent(false, "Integer1");
+            Assert.AreEqual("False", element.XElement?.Element("Integer1")?.Value);
+            element.SetContent("Text", "Integer1");
+            Assert.AreEqual("Text", element.XElement?.Element("Integer1")?.Value);
+            element.SetContent("Text", "NewItem");
+            Assert.AreEqual("Text", element.XElement?.Element("NewItem")?.Value);
+        }
+
+        [TestMethod]
+        public void TestAttributeExtensions()
+        {
+            var xml = new XElement("Root", 
+                new XElement("Element", new object[]
+                {
+                    new XAttribute("Integer", "12345"),
+                    new XAttribute("Double", "1.2345"),
+                    new XAttribute("Float", "3.14"),
+                    new XAttribute("Boolean", "True"),
+                    new XAttribute("String", "Text"),
+                    new XElement("SubElement", new object[]
+                    {
+                        new XAttribute("Integer", "12345"),
+                        new XAttribute("Double", "1.2345"),
+                        new XAttribute("Float", "3.14"),
+                        new XAttribute("Boolean", "True"),
+                        new XAttribute("String", "Text"),
+                    }),
+                }));
+
+            var element = new Element(xml, "Element");
+            Assert.AreEqual(12345, element.GetAttribute<int>("Integer"));
+            Assert.AreEqual(12345, element.GetAttribute<int?>("Integer"));
+            Assert.IsNull(element.GetAttribute<int?>("Integer2"));
+            Assert.AreEqual(1.2345, element.GetAttribute<double>("Double"));
+            Assert.AreEqual(1.2345, element.GetAttribute<double?>("Double"));
+            Assert.IsNull(element.GetAttribute<double?>("Double2"));
+            Assert.AreEqual(3.14f, element.GetAttribute<float>("Float"));
+            Assert.AreEqual(3.14f, element.GetAttribute<float?>("Float"));
+            Assert.IsNull(element.GetAttribute<float?>("Float2"));
+            Assert.AreEqual(true, element.GetAttribute<bool>("Boolean"));
+            Assert.AreEqual(true, element.GetAttribute<bool?>("Boolean"));
+            Assert.IsNull(element.GetAttribute<bool?>("Boolean2"));
+            Assert.AreEqual("Text", element.GetAttribute<string>("String"));
+            Assert.AreEqual("Text", element.GetAttribute<string?>("String"));
+            Assert.IsNull(element.GetAttribute<string?>("String2"));
+
+            element.SetAttribute(9999, "Integer");
+            Assert.AreEqual("9999", element.XElement?.Attribute("Integer")?.Value);
+            element.SetAttribute(1.2345, "Integer");
+            Assert.AreEqual("1.2345", element.XElement?.Attribute("Integer")?.Value);
+            element.SetAttribute(3.14f, "Integer");
+            Assert.AreEqual("3.14", element.XElement?.Attribute("Integer")?.Value);
+            element.SetAttribute(true, "Integer");
+            Assert.AreEqual("True", element.XElement?.Attribute("Integer")?.Value);
+            element.SetAttribute("Text", "Integer");
+            Assert.AreEqual("Text", element.XElement?.Attribute("Integer")?.Value);
+            element.SetAttribute(-1, "Append");
+            Assert.AreEqual("-1", element.XElement?.Attribute("Append")?.Value);
+
+            Assert.AreEqual(12345, element.GetAttribute<int>("SubElement", "Integer"));
+            Assert.AreEqual(12345, element.GetAttribute<int?>("SubElement", "Integer"));
+            Assert.IsNull(element.GetAttribute<int?>("SubElement", "Integer2"));
+            Assert.AreEqual(1.2345, element.GetAttribute<double>("SubElement", "Double"));
+            Assert.AreEqual(1.2345, element.GetAttribute<double?>("SubElement", "Double"));
+            Assert.IsNull(element.GetAttribute<double?>("SubElement", "Double2"));
+            Assert.AreEqual(3.14f, element.GetAttribute<float>("SubElement", "Float"));
+            Assert.AreEqual(3.14f, element.GetAttribute<float?>("SubElement", "Float"));
+            Assert.IsNull(element.GetAttribute<float?>("SubElement", "Float2"));
+            Assert.AreEqual(true, element.GetAttribute<bool>("SubElement", "Boolean"));
+            Assert.AreEqual(true, element.GetAttribute<bool?>("SubElement", "Boolean"));
+            Assert.IsNull(element.GetAttribute<bool?>("SubElement", "Boolean2"));
+            Assert.AreEqual("Text", element.GetAttribute<string>("SubElement", "String"));
+            Assert.AreEqual("Text", element.GetAttribute<string?>("SubElement", "String"));
+            Assert.IsNull(element.GetAttribute<string?>("SubElement", "String2"));
+
+            element.SetAttribute(9999, "SubElement", "Integer");
+            Assert.AreEqual("9999", element.XElement?.Element("SubElement")?.Attribute("Integer")?.Value);
+            element.SetAttribute(1.2345, "SubElement", "Integer");
+            Assert.AreEqual("1.2345", element.XElement?.Element("SubElement")?.Attribute("Integer")?.Value);
+            element.SetAttribute(3.14f, "SubElement", "Integer");
+            Assert.AreEqual("3.14", element.XElement?.Element("SubElement")?.Attribute("Integer")?.Value);
+            element.SetAttribute(true, "SubElement", "Integer");
+            Assert.AreEqual("True", element.XElement?.Element("SubElement")?.Attribute("Integer")?.Value);
+            element.SetAttribute("Text", "SubElement", "Integer");
+            Assert.AreEqual("Text", element.XElement?.Element("SubElement")?.Attribute("Integer")?.Value);
+            element.SetAttribute(false, "SubElement", "Append");
+            Assert.AreEqual("False", element.XElement?.Element("SubElement")?.Attribute("Append")?.Value);
+
+            element.SetAttribute(9999, "AppendElement", "Integer");
+            Assert.AreEqual("9999", element.XElement?.Element("AppendElement")?.Attribute("Integer")?.Value);
+        }
     }
 }

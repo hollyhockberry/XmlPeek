@@ -2,6 +2,7 @@
 // This software is released under the MIT License.
 // http://opensource.org/licenses/mit-license.php
 
+using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 
 namespace XmlPeek.Extensions
@@ -64,6 +65,15 @@ namespace XmlPeek.Extensions
         }
 
         public static T? Value<T>(this XElement? element) => Convert<T>(element?.Value);
+
+        public static T? Attribute<T>(this XElement? element, [CallerMemberName] string? name = default)
+        {
+            if (name is null)
+            {
+                throw new NotImplementedException();                
+            }
+            return Convert<T>(element?.Attribute(name)?.Value);
+        }
 
         public static IEnumerable<T>? Values<T>(this XElement? element)
         {
