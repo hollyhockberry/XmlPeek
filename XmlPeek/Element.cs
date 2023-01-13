@@ -89,7 +89,7 @@ namespace XmlPeek
             element.Add(XElement?.Elements());
         }
 
-        protected T? GetContent<T>([CallerMemberName] string? elementName = default)
+        public T? GetContent<T>([CallerMemberName] string? elementName = default)
         {
             if (elementName == null)
             {
@@ -98,7 +98,7 @@ namespace XmlPeek
             return (XElement?.Element(elementName)).Value<T>();
         }
 
-        protected void SetContent<T>(T? value, [CallerMemberName] string? elementName = default)
+        public void SetContent<T>(T? value, [CallerMemberName] string? elementName = default)
         {
             if (elementName == null)
             {
