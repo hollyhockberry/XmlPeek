@@ -313,6 +313,8 @@ namespace XmlPeek.UnitTest
             Assert.AreEqual("True", element.XElement?.Attribute("Integer")?.Value);
             element.SetAttribute("Text", "Integer");
             Assert.AreEqual("Text", element.XElement?.Attribute("Integer")?.Value);
+            element.SetAttribute(-1, "Append");
+            Assert.AreEqual("-1", element.XElement?.Attribute("Append")?.Value);
 
             Assert.AreEqual(12345, element.GetAttribute<int>("SubElement", "Integer"));
             Assert.AreEqual(12345, element.GetAttribute<int?>("SubElement", "Integer"));
@@ -340,6 +342,11 @@ namespace XmlPeek.UnitTest
             Assert.AreEqual("True", element.XElement?.Element("SubElement")?.Attribute("Integer")?.Value);
             element.SetAttribute("Text", "SubElement", "Integer");
             Assert.AreEqual("Text", element.XElement?.Element("SubElement")?.Attribute("Integer")?.Value);
+            element.SetAttribute(false, "SubElement", "Append");
+            Assert.AreEqual("False", element.XElement?.Element("SubElement")?.Attribute("Append")?.Value);
+
+            element.SetAttribute(9999, "AppendElement", "Integer");
+            Assert.AreEqual("9999", element.XElement?.Element("AppendElement")?.Attribute("Integer")?.Value);
         }
     }
 }
