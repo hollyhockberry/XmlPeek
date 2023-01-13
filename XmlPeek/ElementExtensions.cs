@@ -39,6 +39,15 @@ namespace XmlPeek
             return (element.XElement).Attribute<T>(attributeName);
         }
 
+        public static T? GetAttribute<T>(this Element element, string elementName, [CallerMemberName] string? attributeName = default)
+        {
+            if (attributeName == null)
+            {
+                throw new ArgumentNullException(nameof(attributeName));
+            }
+            return (element.XElement?.Element(elementName)).Attribute<T>(attributeName);
+        }
+
         public static void SetAttribute<T>(this Element element, T value, [CallerMemberName] string? attributeName = default)
         {
             if (attributeName == null)
@@ -52,6 +61,29 @@ namespace XmlPeek
             }
             else
             {   
+                attr.Value = $"{value}";
+            }
+        }
+
+        public static void SetAttribute<T>(this Element element, T value, string elementName, [CallerMemberName] string? attributeName = default)
+        {
+            if (attributeName == null)
+            {
+                throw new ArgumentNullException(nameof(attributeName));
+            }
+            var e = element.XElement?.Element(elementName);
+            if (e == null)
+            {
+                e = new XElement(elementName);
+                element.ValidXElement.Add(e);
+            }
+            var attr = e.Attribute(attributeName);
+            if (attr == null)
+            {
+                e.Add(new XAttribute(attributeName, $"{value}"));
+            }
+            else
+            {
                 attr.Value = $"{value}";
             }
         }
