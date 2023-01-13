@@ -14,30 +14,53 @@ namespace XmlPeek.Extensions
             {
                 return default;
             }
-            var type = typeof(T);
+            try
+            {
+                var type = typeof(T);
 
-            if (type == typeof(int))
-            {
-                return (T)(object)int.Parse(str);
+                if (type == typeof(int))
+                {
+                    return (T)(object)int.Parse(str);
+                }
+                if (type == typeof(int?))
+                {
+                    return (T?)(object)int.Parse(str);
+                }
+                if (type == typeof(double))
+                {
+                    return (T)(object)double.Parse(str);
+                }
+                if (type == typeof(double?))
+                {
+                    return (T?)(object)double.Parse(str);
+                }
+                if (type == typeof(float))
+                {
+                    return (T)(object)float.Parse(str);
+                }
+                if (type == typeof(float?))
+                {
+                    return (T?)(object)float.Parse(str);
+                }
+                if (type == typeof(bool))
+                {
+                    return (T)(object)bool.Parse(str);
+                }
+                if (type == typeof(bool?))
+                {
+                    return (T?)(object)bool.Parse(str);
+                }
+                if (type == typeof(string))
+                {
+                    return (T)(object)str;
+                }
             }
-            if (type == typeof(double))
+            catch (FormatException)
             {
-                return (T)(object)double.Parse(str);
-            }
-            if (type == typeof(float))
-            {
-                return (T)(object)float.Parse(str);
-            }
-            if (type == typeof(bool))
-            {
-                return (T)(object)bool.Parse(str);
-            }
-            if (type == typeof(string))
-            {
-                return (T)(object)str;
+                return default;
             }
 
-            return default;
+            throw new NotImplementedException("Unsupported type");
         }
 
         public static T? Value<T>(this XElement? element) => Convert<T>(element?.Value);
