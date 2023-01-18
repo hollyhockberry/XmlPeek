@@ -5,9 +5,9 @@
 using System.Collections;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
-using XmlPeek.Extensions;
+using XmlPicker.Extensions;
 
-namespace XmlPeek
+namespace XmlPicker
 {
     public class ValueList<T> : Element, IList<T>
     {

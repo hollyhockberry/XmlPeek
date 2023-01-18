@@ -5,10 +5,10 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
-using XmlPeek.Attributes;
-using XmlPeek.Extensions;
+using XmlPicker.Attributes;
+using XmlPicker.Extensions;
 
-namespace XmlPeek
+namespace XmlPicker
 {
     public class Element
     {

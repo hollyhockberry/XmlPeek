@@ -5,7 +5,7 @@
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 
-namespace XmlPeek.Extensions
+namespace XmlPicker.Extensions
 {
     internal static class XElementExtensions
     {
