@@ -4,7 +4,7 @@
 
 using System.Xml.Linq;
 
-namespace XmlPeek.UnitTest
+namespace XmlPicker.UnitTest
 {
     [TestClass]
     public class SubElementsTest

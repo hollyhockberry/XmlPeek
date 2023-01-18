@@ -1,6 +1,6 @@
-[![Build and Test](https://github.com/hollyhockberry/XmlPeek/actions/workflows/dotnet.yml/badge.svg)](https://github.com/hollyhockberry/XmlPeek/actions/workflows/dotnet.yml)
+[![Build and Test](https://github.com/hollyhockberry/XmlPicker/actions/workflows/dotnet.yml/badge.svg)](https://github.com/hollyhockberry/XmlPicker/actions/workflows/dotnet.yml)
 
-# XmlPeek
+# XmlPicker
 
 XMLドキュメントの一部分を操作するライブラリです。  
 XElementのヘルパークラスのような感じです。

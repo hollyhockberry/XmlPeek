@@ -2,7 +2,7 @@
 // This software is released under the MIT License.
 // http://opensource.org/licenses/mit-license.php
 
-namespace XmlPeek.Attributes
+namespace XmlPicker.Attributes
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class IgnoreElementAttribute : Attribute
