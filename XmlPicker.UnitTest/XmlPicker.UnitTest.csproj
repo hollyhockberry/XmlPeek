@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\XmlPeek\XmlPeek.csproj" />
+    <ProjectReference Include="..\XmlPicker\XmlPicker.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XmlPeek", "XmlPeek\XmlPeek.csproj", "{E603EAC9-FFA9-4093-849F-165DFB30E295}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XmlPicker", "XmlPicker\XmlPicker.csproj", "{E603EAC9-FFA9-4093-849F-165DFB30E295}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlPeek.UnitTest", "XmlPeek.UnitTest\XmlPeek.UnitTest.csproj", "{77D39496-7DFC-4F6F-A3F0-A515FA032E87}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlPicker.UnitTest", "XmlPicker.UnitTest\XmlPicker.UnitTest.csproj", "{77D39496-7DFC-4F6F-A3F0-A515FA032E87}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
