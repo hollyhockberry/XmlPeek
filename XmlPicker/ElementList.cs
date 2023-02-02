@@ -27,12 +27,20 @@ namespace XmlPicker
             _List = XElement?.Elements()
                 .Select(e => ctor.Invoke(new object[] { new XElement("Root", e), itemName }))
                 .OfType<T>()
+                .Where(e => e.XElement?.Name == e.Name)
                 .ToList();
             if (_List?.Any(e => e.XElement == null) == true)
             {
                 throw new Exception($"{name} contains invalid elements.");
             }
-            XElement?.RemoveAll();
+            if (_List == null)
+            {
+                return;
+            }
+            foreach(var o in _List.Select(e => e.Name).Distinct())
+            {
+                XElement?.Elements(o).Remove();
+            }
         }
 
         public ElementList(XElement? parent, [CallerMemberName] string? name = default) : base(parent, name!)
@@ -49,12 +57,20 @@ namespace XmlPicker
             _List = XElement?.Elements()
                 .Select(e => ctor.Invoke(new object[] { new XElement("Root", e) }))
                 .OfType<T>()
+                .Where(e => e.XElement?.Name == e.Name)
                 .ToList();
             if (_List?.Any(e => e.XElement == null) == true)
             {
                 throw new Exception($"{name} contains invalid elements.");
             }
-            XElement?.RemoveAll();
+            if (_List == null)
+            {
+                return;
+            }
+            foreach (var o in _List.Select(e => e.Name).Distinct())
+            {
+                XElement?.Elements(o).Remove();
+            }
         }
 
         [IgnoreElement]
