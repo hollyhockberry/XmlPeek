@@ -12,7 +12,7 @@ namespace XmlPicker
 {
     public class Element
     {
-        public string Name { get; }
+        public readonly string Name;
 
         XElement? _XElement;
 
@@ -87,6 +87,7 @@ namespace XmlPicker
             }
             element.RemoveAll();
             element.Add(XElement?.Elements());
+            element.Add(XElement?.Attributes());
         }
 
         public T? GetContent<T>([CallerMemberName] string? elementName = default)
