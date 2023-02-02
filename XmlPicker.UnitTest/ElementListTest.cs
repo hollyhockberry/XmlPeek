@@ -2,6 +2,7 @@
 // This software is released under the MIT License.
 // http://opensource.org/licenses/mit-license.php
 
+using System.Linq;
 using System.Xml.Linq;
 
 namespace XmlPicker.UnitTest
@@ -146,45 +147,30 @@ namespace XmlPicker.UnitTest
         }
 
         [TestMethod]
-        public void TestInvalidElements1()
+        public void TestAdditionalElement()
         {
             var xml = new XElement("Root",
                 new XElement("ElementList", new object[]
                 {
                     new XElement("Element", new XElement("Child", "0")),
+                    new XElement("OtherElement1"),
                     new XElement("Element", new XElement("Child", "1")),
-                    new XElement("OtherElement", new XElement("Other", "0")),
                     new XElement("Element", new XElement("Child", "2")),
+                    new XElement("OtherElement2"),
                     new XElement("Element", new XElement("Child", "3")),
-                    new XElement("OtherElement", new XElement("Other", "1")),
                     new XElement("Element", new XElement("Child", "4")),
                 }));
 
-            Assert.ThrowsException<Exception>(() =>
-            {
-                _ = new ElementList<TestElement>(xml, "ElementList");
-            });
-        }
+            var element = new ElementList<Element>("Element", xml, "ElementList");
 
-        [TestMethod]
-        public void TestInvalidElements2()
-        {
-            var xml = new XElement("Root",
-                new XElement("ElementList", new object[]
-                {
-                    new XElement("Element", new XElement("Child", "0")),
-                    new XElement("Element", new XElement("Child", "1")),
-                    new XElement("OtherElement", new XElement("Other", "0")),
-                    new XElement("Element", new XElement("Child", "2")),
-                    new XElement("Element", new XElement("Child", "3")),
-                    new XElement("OtherElement", new XElement("Other", "1")),
-                    new XElement("Element", new XElement("Child", "4")),
-                }));
+            Assert.IsFalse(element.IsReadOnly);
+            Assert.AreEqual(5, element.Count);
+            Assert.AreEqual(2, element.XElement?.Elements().Count());
+            Assert.IsNotNull(element.XElement?.Element("OtherElement1"));
+            Assert.IsNotNull(element.XElement?.Element("OtherElement2"));
 
-            Assert.ThrowsException<Exception>(() =>
-            {
-                _ = new ElementList<Element>("Element", xml, "ElementList");
-            });
+            element.Poke(xml);
+
         }
     }
 }

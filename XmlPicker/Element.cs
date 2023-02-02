@@ -12,7 +12,7 @@ namespace XmlPicker
 {
     public class Element
     {
-        readonly string Name;
+        public string Name { get; }
 
         XElement? _XElement;
 
