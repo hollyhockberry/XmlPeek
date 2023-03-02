@@ -19,13 +19,13 @@ namespace XmlPicker.UnitTest
 
             public string? Child11
             {
-                get => GetContent<string>();
+                get => GetContent<string?>();
                 set => SetContent(value);
             }
 
             public string? Child12
             {
-                get => GetContent<string>();
+                get => GetContent<string?>();
                 set => SetContent(value);
             }
         }
@@ -114,5 +114,38 @@ namespace XmlPicker.UnitTest
             Assert.AreEqual("Text11", xml.Element("TestElement")?.Element("Child11")?.Value);
             Assert.AreEqual("Text12", xml.Element("TestElement")?.Element("Child12")?.Value);
         }
+
+        [TestMethod]
+        public void TestEmptyConstruction()
+        {
+            var xml = new XElement("Root",
+                new XElement("TestElement", new object[]
+                {
+                    new XElement("Child11", ""),
+                    new XElement("Child12"),
+                }));
+
+            var element = new TestElement(xml);
+
+            Assert.AreEqual("", element.Child11);
+            //Assert.IsNull(element.Child12);
+            Assert.AreEqual(1, xml.Elements()?.Count());
+            Assert.AreEqual(0, xml.Element("TestElement")?.Elements()?.Count());
+
+            element.Child11 = null;
+            element.Child12 = "";
+
+            element.Poke(xml);
+
+            var text =
+@"<Root>
+  <TestElement>
+    <Child11 />
+    <Child12></Child12>
+  </TestElement>
+</Root>";
+            Assert.AreEqual(text, xml.ToString());
+        }
+
     }
 }
