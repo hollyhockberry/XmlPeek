@@ -46,6 +46,9 @@ namespace XmlPicker.UnitTest
             Assert.AreEqual(1, xml.Elements()?.Count());
             Assert.AreEqual(5, xml.Element("ElementList")?.Elements()?.Count());
             Assert.AreEqual("01234", string.Join("", xml.Element("ElementList")?.Elements()?.Select(e => e.Value)!));
+
+            element.Poke(xml);
+            Assert.AreEqual(5, xml.Element("ElementList")?.Elements()?.Count());
         }
 
         [TestMethod]
@@ -72,6 +75,9 @@ namespace XmlPicker.UnitTest
             Assert.AreEqual(1, xml.Element("ElementList")?.Elements()?.Count());
             Assert.AreEqual(1, xml.Element("ElementList")?.Element("Element")?.Elements()?.Count());
             Assert.AreEqual("0", xml.Element("ElementList")?.Element("Element")?.Element("Child")?.Value);
+
+            element.Poke(xml);
+            Assert.AreEqual(1, xml.Element("ElementList")?.Elements()?.Count());
         }
 
         [TestMethod]
@@ -97,6 +103,9 @@ namespace XmlPicker.UnitTest
             Assert.AreEqual(1, xml.Element("ElementList")?.Elements()?.Count());
             Assert.AreEqual(1, xml.Element("ElementList")?.Element("Element")?.Elements()?.Count());
             Assert.AreEqual("0", xml.Element("ElementList")?.Element("Element")?.Element("Child")?.Value);
+
+            element.Poke(xml);
+            Assert.AreEqual(1, xml.Element("ElementList")?.Elements()?.Count());
         }
 
         [TestMethod]
