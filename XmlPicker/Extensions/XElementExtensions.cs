@@ -64,7 +64,7 @@ namespace XmlPicker.Extensions
             throw new NotImplementedException("Unsupported type");
         }
 
-        public static T? Value<T>(this XElement? element) => Convert<T>(element?.Value);
+        public static T? Value<T>(this XElement? element) => Convert<T>(element?.IsEmpty == true ? null : element?.Value);
 
         public static T? Attribute<T>(this XElement? element, [CallerMemberName] string? name = default)
         {
