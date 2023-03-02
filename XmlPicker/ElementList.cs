@@ -126,6 +126,10 @@ namespace XmlPicker
                 {
                     e.Poke(dummy);
                 }
+                foreach(var n in List.Select(e => e.Name).Distinct())
+                {
+                    ValidXElement.Elements(n)?.Remove();
+                }
                 ValidXElement.Add(List.Select(e => e.XElement));
             }
             base.Poke(parent);
