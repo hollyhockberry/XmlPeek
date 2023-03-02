@@ -111,7 +111,14 @@ namespace XmlPicker
                 e = new XElement(elementName);
                 ValidXElement.Add(e);
             }
-            e.Value = $"{value}";
+            if (value is null)
+            {
+                e.RemoveAll();
+            }
+            else
+            {
+                e.Value = $"{value}";
+            }
         }
 
         public T? GetAttribute<T>([CallerMemberName] string? attributeName = default)
