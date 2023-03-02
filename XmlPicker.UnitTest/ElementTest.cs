@@ -204,7 +204,7 @@ namespace XmlPicker.UnitTest
             Assert.IsNull(element.Boolean2);
             Assert.IsNull(element.Boolean3);
             Assert.AreEqual("Text", element.String1);
-            Assert.AreEqual("", element.String2);
+            Assert.IsNull(element.String2);
             Assert.IsNull(element.String3);
         }
 
@@ -248,7 +248,7 @@ namespace XmlPicker.UnitTest
             Assert.IsNull(element.GetContent<bool?>("Boolean3"));
             Assert.AreEqual("Text", element.GetContent<string?>("String1"));
             Assert.AreEqual("Text", element.GetContent<string>("String1"));
-            Assert.AreEqual("", element.GetContent<string>("String2"));
+            Assert.IsNull(element.GetContent<string>("String2"));
             Assert.IsNull(element.GetContent<string?>("String3"));
 
             element.SetContent(9999, "Integer1");
